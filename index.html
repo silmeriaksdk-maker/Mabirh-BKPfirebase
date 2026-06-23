@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mabirh BKP</title>
+    
+    <!-- Link Manifest PWA -->
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -312,11 +318,9 @@
         // 1. MEKANISME STATE AUTHENTICATION (Memantau login/logout)
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // Pengguna berhasil masuk
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 
-                // Mengaktifkan sinkronisasi database setelah login sukses
                 dataRef = db.ref('mabirh_live_data');
                 dataRef.on('value', (snapshot) => {
                     const data = snapshot.val();
@@ -329,7 +333,6 @@
                     renderUI();
                 });
             } else {
-                // Pengguna belum masuk / logout
                 document.getElementById('auth-screen').classList.remove('hidden');
                 document.getElementById('main-app').classList.add('hidden');
                 
@@ -340,7 +343,6 @@
             }
         });
 
-        // Fungsi Proses Masuk (Pendaftaran dilakukan manual melalui Firebase Console)
         function handleAuthAction() {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
@@ -351,7 +353,6 @@
                 .catch(error => alert("Gagal Masuk: " + error.message));
         }
 
-        // Fungsi Logout
         function handleLogout() {
             if(confirm("Apakah Anda yakin ingin keluar dari akun?")) {
                 auth.signOut();
@@ -721,6 +722,17 @@
             myChart = new Chart(ctx, {
                 type: 'bar',
                 data: { labels: labels, datasets: [{ label: 'Pcs', data: dataPcs, backgroundColor: 'blue' }, { label: 'Rp', data: dataRp, type: 'line', borderColor: 'green' }] }
+            });
+        }
+
+        // =======================================================
+        // PENDAFTARAN SERVICE WORKER (PWA)
+        // =======================================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('PWA Service Worker sukses terdaftar!', reg))
+                    .catch(err => console.error('PWA Gagal didaftarkan', err));
             });
         }
     </script>
