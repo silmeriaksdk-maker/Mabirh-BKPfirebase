@@ -1,4 +1,5 @@
 {
+  "id": "mabirh-bkp-app-id",
   "name": "Mabirh BKP",
   "short_name": "MabirhBKP",
   "description": "Aplikasi Manajemen Penjualan Mabirh BKP",
@@ -19,6 +20,22 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://via.placeholder.com/360x640",
+      "sizes": "360x640",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tampilan Aplikasi di Handphone"
+    },
+    {
+      "src": "https://via.placeholder.com/640x360",
+      "sizes": "640x360",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tampilan Aplikasi di Desktop"
     }
   ]
 }
