@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mabirh BKP</title>
     
-    <!-- Link Manifest PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,7 +15,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
-    <!-- SDK Firebase (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -33,7 +31,6 @@
 </head>
 <body class="text-slate-800">
 
-    <!-- ================= LAYAR AUTENTIKASI (HANYA LOGIN) ================= -->
     <div id="auth-screen" class="fixed inset-0 z-[200] flex items-center justify-center bg-slate-100 p-4">
         <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm border border-slate-200">
             <h2 class="text-2xl font-black text-blue-600 text-center mb-1">Mabirh BKP</h2>
@@ -55,7 +52,6 @@
     </div>
 
 
-    <!-- ================= HALAMAN UTAMA APLIKASI ================= -->
     <div id="main-app" class="hidden">
         <header class="glass sticky top-0 z-50 p-4 shadow-sm flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -71,7 +67,6 @@
             </div>
         </header>
 
-        <!-- Page Dashboard -->
         <div id="page-dashboard" class="page active p-4 space-y-4">
             <div class="grid grid-cols-2 gap-3">
                 <div class="glass p-3 rounded-xl shadow-sm border-l-4 border-blue-500">
@@ -87,7 +82,7 @@
                     <div id="dashLabaBarang" class="font-bold text-lg">Rp 0</div>
                 </div>
                 <div class="glass p-3 rounded-xl shadow-sm border-l-4 border-purple-500">
-                    <div class="text-xs text-slate-500">Poin (30/pcs)</div>
+                    <div id="labelDashPoin" class="text-xs text-slate-500">Poin</div>
                     <div id="dashPoin" class="font-bold text-lg">Rp 0</div>
                 </div>
             </div>
@@ -102,7 +97,6 @@
             </div>
         </div>
 
-        <!-- Page Stok -->
         <div id="page-stok" class="page p-4 space-y-4">
             <div class="glass p-4 rounded-xl shadow-sm">
                 <h2 class="font-bold text-lg mb-3">Input Penjualan</h2>
@@ -129,7 +123,6 @@
             </div>
         </div>
 
-        <!-- Page Aktifitas -->
         <div id="page-aktifitas" class="page p-4 space-y-4">
             <div class="flex bg-slate-200 p-1 rounded-lg text-xs font-bold text-center mb-4">
                 <div onclick="switchSubTab('sub-jual')" class="flex-1 p-2 rounded-md bg-white shadow cursor-pointer" id="tab-sub-jual">Penjualan</div>
@@ -167,7 +160,6 @@
             </div>
         </div>
 
-        <!-- Page Grafik -->
         <div id="page-grafik" class="page p-4 space-y-4">
             <div class="glass p-4 rounded-xl shadow-sm" id="chartCaptureArea">
                 <h2 class="font-bold text-lg mb-2">Grafik Penjualan</h2>
@@ -185,21 +177,41 @@
             <button onclick="saveDivToImage('chartCaptureArea', 'Grafik_Penjualan')" class="w-full bg-slate-800 text-white p-3 rounded-lg font-bold shadow-md">Simpan Grafik (JPG)</button>
         </div>
 
-        <!-- Page Rekap -->
         <div id="page-rekap" class="page p-4 space-y-4">
             <h2 class="font-bold text-lg">Riwayat Season</h2>
             <div id="listSeasons" class="space-y-4"></div>
         </div>
 
-        <!-- Page Pengaturan -->
         <div id="page-pengaturan" class="page p-4 space-y-4">
             <div class="glass p-4 rounded-xl shadow-sm space-y-3">
                 <h2 class="font-bold border-b pb-2">Pengaturan Perusahaan</h2>
                 <input type="text" id="setCompanyName" placeholder="Nama Perusahaan" class="w-full p-2 border rounded text-sm">
                 <label class="block text-xs text-slate-500">Logo Perusahaan</label>
                 <input type="file" id="setLogo" accept="image/*" class="w-full text-sm">
-                <button onclick="saveSettings()" class="w-full bg-blue-600 text-white p-2 rounded font-bold">Simpan Pengaturan</button>
+                
+                <h2 class="font-bold border-b pb-2 mt-4">Pengaturan Konversi / Harga per Pcs</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-500">Omset (Rp)</label>
+                        <input type="number" id="setOmsetRate" class="w-full p-2 border rounded text-sm" placeholder="1200">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500">Laba Barang Kotor (Rp)</label>
+                        <input type="number" id="setLabaBarangRate" class="w-full p-2 border rounded text-sm" placeholder="750">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500">Laba Bersih (Rp)</label>
+                        <input type="number" id="setLabaBersihRate" class="w-full p-2 border rounded text-sm" placeholder="450">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500">Poin (Rp)</label>
+                        <input type="number" id="setPoinRate" class="w-full p-2 border rounded text-sm" placeholder="30">
+                    </div>
+                </div>
+
+                <button onclick="saveSettings()" class="w-full bg-blue-600 text-white p-2 rounded font-bold mt-2">Simpan Pengaturan</button>
             </div>
+
             <div class="glass p-4 rounded-xl shadow-sm space-y-3">
                 <h2 class="font-bold border-b pb-2">Tindakan Data & Akun</h2>
                 <button onclick="triggerBelanja()" class="w-full bg-yellow-500 text-white p-3 rounded-lg font-bold shadow-md">Belanja (Laba Barang)</button>
@@ -215,12 +227,10 @@
                 </div>
                 <button onclick="resetAll()" class="w-full border border-red-500 text-red-500 p-2.5 rounded-lg text-sm font-bold mt-2">RESET SEMUA DATA</button>
                 
-                <!-- Tombol Keluar Akun -->
                 <button onclick="handleLogout()" class="w-full bg-red-600 text-white p-3 rounded-xl font-bold shadow-md mt-6">KELUAR AKUN (LOGOUT)</button>
             </div>
         </div>
 
-        <!-- Modals -->
         <div id="endSeasonModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center p-4">
             <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 text-center">
                 <h2 class="font-bold text-lg mb-4">Bagikan Laba Bersih?</h2>
@@ -256,7 +266,6 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation -->
         <nav class="fixed bottom-0 w-full bg-white border-t flex justify-around p-2 pb-4 text-[10px] text-slate-500 z-50">
             <div onclick="switchPage('dashboard')" class="nav-item active flex flex-col items-center p-1 cursor-pointer w-1/6">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>Home
@@ -279,7 +288,6 @@
         </nav>
     </div>
 
-    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         // =======================================================
         // MASUKKAN KONFIGURASI FIREBASE ANDA DI SINI
@@ -303,6 +311,7 @@
 
         const defaultState = {
             companyName: "Mabirh BKP", logo: null, pct: 100, stock: 0,
+            rates: { omsetPerPcs: 1200, labaBarangPerPcs: 750, labaBersihPerPcs: 450, poinPerPcs: 30 },
             finances: { omset: 0, labaBersih: 0, labaBarang: 0, poin: 0 },
             salesTable: [], saleHistory: [], expHistory: [], stkExpHistory: [],
             seasons: [], chartData: [],
@@ -380,12 +389,23 @@
         }
 
         function renderUI() {
+            // Memastikan fallback data rates ada (jika pengguna memakai database lama)
+            if (!appData.rates) {
+                appData.rates = { omsetPerPcs: 1200, labaBarangPerPcs: 750, labaBersihPerPcs: 450, poinPerPcs: 30 };
+            }
+
             document.getElementById('headerCompanyName').textContent = appData.companyName;
             document.getElementById('setCompanyName').value = appData.companyName;
             document.getElementById('headerPct').textContent = appData.pct + '%';
             document.getElementById('headerStock').textContent = appData.stock + ' Pcs';
             if(appData.logo) document.getElementById('logoImg').src = appData.logo;
             
+            // Set Nilai Input Pengaturan Rates
+            document.getElementById('setOmsetRate').value = appData.rates.omsetPerPcs;
+            document.getElementById('setLabaBarangRate').value = appData.rates.labaBarangPerPcs;
+            document.getElementById('setLabaBersihRate').value = appData.rates.labaBersihPerPcs;
+            document.getElementById('setPoinRate').value = appData.rates.poinPerPcs;
+
             document.getElementById('saleDate').value = appData.lastSaleDate || new Date().toISOString().split('T')[0];
             let today = new Date().toISOString().split('T')[0];
             document.getElementById('expDate').value = today;
@@ -396,6 +416,9 @@
             document.getElementById('dashLabaBersih').textContent = formatRp(appData.finances.labaBersih);
             document.getElementById('dashLabaBarang').textContent = formatRp(appData.finances.labaBarang);
             document.getElementById('dashPoin').textContent = formatRp(appData.finances.poin);
+            
+            // Perbarui label dashboard secara dinamis
+            document.getElementById('labelDashPoin').textContent = `Poin (${appData.rates.poinPerPcs}/pcs)`;
 
             const tbody = document.getElementById('salesTableBody');
             tbody.innerHTML = '';
@@ -522,11 +545,13 @@
             appData.stock -= pcsBawa;
             appData.stock += sisa;
             
-            let o = terjual * 1200;
-            let lbBarangKotor = terjual * 750;
-            let p = terjual * 30;
+            if (!appData.rates) appData.rates = { omsetPerPcs: 1200, labaBarangPerPcs: 750, labaBersihPerPcs: 450, poinPerPcs: 30 };
+            
+            let o = terjual * appData.rates.omsetPerPcs;
+            let lbBarangKotor = terjual * appData.rates.labaBarangPerPcs;
+            let p = terjual * appData.rates.poinPerPcs;
             let lbBarangBersih = lbBarangKotor - p;
-            let lbBersih = terjual * 450;
+            let lbBersih = terjual * appData.rates.labaBersihPerPcs;
             
             appData.finances.omset += o;
             appData.finances.labaBarang += lbBarangBersih;
@@ -647,13 +672,27 @@
         function closeModal() { document.getElementById('rekapModal').classList.add('hidden'); }
         
         function saveSettings() {
+            if (!appData.rates) appData.rates = {};
+            
+            const getRate = (id, def) => {
+                let val = parseInt(document.getElementById(id).value);
+                return isNaN(val) ? def : val;
+            };
+
+            appData.rates.omsetPerPcs = getRate('setOmsetRate', 1200);
+            appData.rates.labaBarangPerPcs = getRate('setLabaBarangRate', 750);
+            appData.rates.labaBersihPerPcs = getRate('setLabaBersihRate', 450);
+            appData.rates.poinPerPcs = getRate('setPoinRate', 30);
+
             appData.companyName = document.getElementById('setCompanyName').value || "Mabirh BKP";
+            
             const file = document.getElementById('setLogo').files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) { appData.logo = e.target.result; saveToCloud(); };
                 reader.readAsDataURL(file);
             } else { saveToCloud(); }
+            
             alert("Pengaturan disimpan!");
         }
 
