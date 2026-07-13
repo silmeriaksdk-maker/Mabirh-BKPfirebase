@@ -202,6 +202,26 @@
 
         <!-- Page Pengaturan -->
         <div id="page-pengaturan" class="page p-4 space-y-4">
+            
+            <!-- Pengaturan Keuangan Manual -->
+            <div class="glass p-4 rounded-xl shadow-sm space-y-3">
+                <h2 class="font-bold border-b pb-2">Edit Keuangan Manual</h2>
+                <div>
+                    <label class="block text-xs text-slate-500 mb-1">Total Omset (Rp)</label>
+                    <input type="number" id="setOmset" class="w-full p-2 border rounded text-sm bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-500 mb-1">Laba Bersih (Rp)</label>
+                    <input type="number" id="setLabaBersih" class="w-full p-2 border rounded text-sm bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-500 mb-1">Laba Barang (Rp)</label>
+                    <input type="number" id="setLabaBarang" class="w-full p-2 border rounded text-sm bg-slate-50">
+                </div>
+                <button onclick="saveManualFinance()" class="w-full bg-emerald-600 text-white p-2 rounded font-bold shadow mt-2">Simpan Keuangan</button>
+            </div>
+
+            <!-- Pengaturan Perusahaan -->
             <div class="glass p-4 rounded-xl shadow-sm space-y-3">
                 <h2 class="font-bold border-b pb-2">Pengaturan Perusahaan</h2>
                 <input type="text" id="setCompanyName" placeholder="Nama Perusahaan" class="w-full p-2 border rounded text-sm">
@@ -209,6 +229,8 @@
                 <input type="file" id="setLogo" accept="image/*" class="w-full text-sm">
                 <button onclick="saveSettings()" class="w-full bg-blue-600 text-white p-2 rounded font-bold">Simpan Pengaturan</button>
             </div>
+
+            <!-- Tindakan Data & Akun -->
             <div class="glass p-4 rounded-xl shadow-sm space-y-3">
                 <h2 class="font-bold border-b pb-2">Tindakan Data & Akun</h2>
                 <button onclick="triggerBelanja()" class="w-full bg-yellow-500 text-white p-3 rounded-lg font-bold shadow-md">Belanja (Laba Barang)</button>
@@ -400,6 +422,11 @@
             document.getElementById('expDate').value = today;
             document.getElementById('stkExpDate').value = today;
             document.getElementById('endSeasonDate').value = today;
+
+            // Update form Edit Keuangan Manual dengan value saat ini
+            document.getElementById('setOmset').value = appData.finances.omset || 0;
+            document.getElementById('setLabaBersih').value = appData.finances.labaBersih || 0;
+            document.getElementById('setLabaBarang').value = appData.finances.labaBarang || 0;
 
             document.getElementById('dashOmset').textContent = formatRp(appData.finances.omset);
             document.getElementById('dashLabaBersih').textContent = formatRp(appData.finances.labaBersih);
@@ -666,6 +693,22 @@
 
         function closeModal() { document.getElementById('rekapModal').classList.add('hidden'); }
         
+        function saveManualFinance() {
+            if(!confirm("Apakah Anda yakin ingin mengubah data keuangan secara manual?")) return;
+            
+            let newOmset = parseInt(document.getElementById('setOmset').value) || 0;
+            let newBersih = parseInt(document.getElementById('setLabaBersih').value) || 0;
+            let newBarang = parseInt(document.getElementById('setLabaBarang').value) || 0;
+            
+            appData.finances.omset = newOmset;
+            appData.finances.labaBersih = newBersih;
+            appData.finances.labaBarang = newBarang;
+            
+            saveToCloud();
+            alert("Data keuangan berhasil diubah!");
+            renderUI();
+        }
+
         function saveSettings() {
             appData.companyName = document.getElementById('setCompanyName').value || "Mabirh BKP";
             const file = document.getElementById('setLogo').files[0];
@@ -674,7 +717,7 @@
                 reader.onload = function(e) { appData.logo = e.target.result; saveToCloud(); };
                 reader.readAsDataURL(file);
             } else { saveToCloud(); }
-            alert("Pengaturan disimpan!");
+            alert("Pengaturan perusahaan disimpan!");
         }
 
         function resetAll() {
