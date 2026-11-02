@@ -209,7 +209,14 @@
                     </div>
                 </div>
 
-                <button onclick="saveSettings()" class="w-full bg-blue-600 text-white p-2 rounded font-bold mt-2">Simpan Pengaturan</button>
+                <h2 class="font-bold border-b pb-2 mt-4">Ubah Saldo Laba Bersih Manual</h2>
+                <div>
+                    <label class="block text-xs text-slate-500 mb-1">Nominal Saldo Laba Bersih (Rp)</label>
+                    <input type="number" id="setManualLabaBersih" class="w-full p-2 border rounded text-sm" placeholder="Masukkan nominal baru">
+                </div>
+                <button onclick="updateManualLabaBersih()" class="w-full bg-emerald-600 text-white p-2 rounded font-bold mt-1">Perbarui Saldo Laba Bersih</button>
+
+                <button onclick="saveSettings()" class="w-full bg-blue-600 text-white p-2 rounded font-bold mt-3">Simpan Pengaturan</button>
             </div>
 
             <div class="glass p-4 rounded-xl shadow-sm space-y-3">
@@ -405,6 +412,11 @@
             document.getElementById('setLabaBarangRate').value = appData.rates.labaBarangPerPcs;
             document.getElementById('setLabaBersihRate').value = appData.rates.labaBersihPerPcs;
             document.getElementById('setPoinRate').value = appData.rates.poinPerPcs;
+            
+            // Mengisi nilai input manual laba bersih sesuai data saat ini jika kosong
+            if(document.getElementById('setManualLabaBersih').value === '') {
+                document.getElementById('setManualLabaBersih').value = appData.finances.labaBersih;
+            }
 
             document.getElementById('saleDate').value = appData.lastSaleDate || new Date().toISOString().split('T')[0];
             let today = new Date().toISOString().split('T')[0];
@@ -671,6 +683,15 @@
 
         function closeModal() { document.getElementById('rekapModal').classList.add('hidden'); }
         
+        // Fungsi untuk memperbarui saldo laba bersih secara manual
+        function updateManualLabaBersih() {
+            let val = parseInt(document.getElementById('setManualLabaBersih').value);
+            if(isNaN(val)) return alert("Masukkan nominal angka yang valid!");
+            appData.finances.labaBersih = val;
+            saveToCloud();
+            alert("Saldo Laba Bersih berhasil diperbarui secara manual!");
+        }
+
         function saveSettings() {
             if (!appData.rates) appData.rates = {};
             
